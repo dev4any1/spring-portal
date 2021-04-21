@@ -4,12 +4,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import net.dev4any1.model.DbObject;
 
 public class BaseDao<T extends DbObject> {
 
 	private Map<Long, T> repository = new HashMap<Long, T>();
-
+    
 	public T createAndGet(T object) {
 		object.setId(repository.size() + 1l);
 		repository.put(object.getId(), object);
@@ -23,7 +27,7 @@ public class BaseDao<T extends DbObject> {
 	public T get(Long id) {
 		return repository.get(id);
 	}
-
+	
 	public void delete(Long id) {
 		repository.remove(id);
 	}

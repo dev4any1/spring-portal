@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -25,11 +26,11 @@ import net.dev4any1.pojo.Journal;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class JournalServiceImpl implements JournalService {
 	@Autowired
-	private JournalDao journalDao;
+	private JournalDao journalDao = new JournalDao();
 	@Autowired
-	private UserServiceImpl userService;
+	private UserServiceImpl userService = new UserServiceImpl();
 	@Autowired
-	private CategoryDao catDao;
+	private CategoryDao catDao = new CategoryDao();
 
 	@Override
 	public List<JournalModel> listAll(UserModel user) {
@@ -59,11 +60,11 @@ public class JournalServiceImpl implements JournalService {
 
 	}
 
-	@Override
+	@Bean
 	public JournalModel publish(PublisherModel publisher, String fileName, Long categoryId, Date publishedAt) {
 		Category cat = catDao.get(categoryId);
 		if (cat == null) {
-			throw new Error("unable to publish journal, category " + categoryId + " not found");
+			throw new Error("unable to publish journal, category with id " + categoryId + " not found");
 		}
 		JournalModel journal = new JournalModel();
 		journal.setName(fileName);

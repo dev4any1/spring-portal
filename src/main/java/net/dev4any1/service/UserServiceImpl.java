@@ -22,13 +22,12 @@ import net.dev4any1.pojo.Role;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserServiceImpl implements UserService {
 	@Autowired
-	private UserDao userDao;
-
+	private UserDao userDao = new UserDao();
 	@Autowired
-	private CategoryDao catDao;
+	private CategoryDao catDao = new CategoryDao();
 	@Autowired
-	private SubscriptionDao subscripDao;
-
+	private SubscriptionDao subscripDao = new SubscriptionDao();
+	
 	public UserModel createSubscriber(String login, String password) {
 		UserModel user = new UserModel();
 		user.setLogin(login);
@@ -47,11 +46,12 @@ public class UserServiceImpl implements UserService {
 		return Optional.ofNullable(null);
 	}
 
-	@Override
-	public SubscriptionModel subscribe(UserModel user, Long categoryId) {
-		CategoryModel cat = catDao.get(categoryId);
+	
+	public SubscriptionModel subscribe(UserModel user, CategoryModel cat) {
+		System.out.println(user.toString());
+		//CategoryModel cat = catDao.get(categoryId);
 		if (cat == null) {
-			throw new Error("category with id " + categoryId + " was not found");
+			throw new Error("category with id " + cat + " was not found");
 		} else {
 			SubscriptionModel sub = new SubscriptionModel();
 			sub.setCategory(cat);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.dev4any1.jsp;
+package net.dev4any1;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -27,6 +27,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import net.dev4any1.dao.CategoryDao;
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
@@ -48,4 +50,5 @@ public class SampleWebJspApplication extends SpringBootServletInitializer {
 	    multipartConfigFactory.setMaxRequestSize("50MB");
 	    return multipartConfigFactory.createMultipartConfig();
 	}
+	
 }

@@ -14,7 +14,7 @@ import net.dev4any1.pojo.User;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class PublisherServiceImpl implements PublisherService {
 	@Autowired
-	private PublisherDao pubDao;
+	private PublisherDao pubDao = new PublisherDao();
 
 	@Override
 	public PublisherModel createPublisher(String name, User user) {
