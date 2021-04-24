@@ -12,7 +12,7 @@ import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.model.CategoryModel;
 
 @Component
-//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CategoryService {
 
 	@Autowired

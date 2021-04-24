@@ -2,11 +2,12 @@ package net.dev4any1;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -19,9 +20,9 @@ import net.dev4any1.service.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class UserServiceTest {
-	@Autowired
+	@Resource
 	private UserService usService;
-	@Autowired
+	@Resource
 	private CategoryService catService;
     
 	private UserModel user;

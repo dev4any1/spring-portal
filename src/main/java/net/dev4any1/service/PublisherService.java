@@ -11,7 +11,7 @@ import net.dev4any1.pojo.Role;
 import net.dev4any1.pojo.User;
 
 @Component
-//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class PublisherService{
 	@Autowired
 	private PublisherDao pubDao = new PublisherDao();

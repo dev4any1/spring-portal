@@ -23,7 +23,7 @@ import net.dev4any1.pojo.Category;
 import net.dev4any1.pojo.Journal;
 
 @Component
-//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class JournalService{
 	@Autowired
 	private JournalDao journalDao = new JournalDao();

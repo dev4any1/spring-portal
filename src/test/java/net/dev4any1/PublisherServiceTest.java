@@ -1,9 +1,10 @@
 package net.dev4any1;
 
+import javax.annotation.Resource;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -17,9 +18,9 @@ import net.dev4any1.service.UserService;
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class PublisherServiceTest {
 
-	@Autowired
+	@Resource
     private PublisherService pubService = new PublisherService();
-	@Autowired
+	@Resource
 	private UserService usService = new UserService();
      
 	@Test

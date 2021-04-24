@@ -19,7 +19,7 @@ import net.dev4any1.model.UserModel;
 import net.dev4any1.pojo.Role;
 
 @Component
-//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserService {
 	@Autowired
 	private UserDao userDao;// = new UserDao();

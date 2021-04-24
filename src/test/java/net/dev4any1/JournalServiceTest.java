@@ -3,25 +3,15 @@ package net.dev4any1;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-//import com.google.inject.AbstractModule;
-//import com.google.inject.Guice;
-//import com.google.inject.Injector;
-//import com.google.inject.Scopes;
-//import com.google.inject.servlet.SessionScoped;
-
-import net.dev4any1.dao.CategoryDao;
-import net.dev4any1.dao.JournalDao;
-import net.dev4any1.dao.SubscriptionDao;
-import net.dev4any1.dao.UserDao;
 import net.dev4any1.model.CategoryModel;
 import net.dev4any1.model.JournalModel;
 import net.dev4any1.model.PublisherModel;
@@ -34,13 +24,13 @@ import net.dev4any1.service.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class JournalServiceTest {
-	@Autowired
+	@Resource
 	private JournalService service;
-	@Autowired
+	@Resource
 	private CategoryService catService;
-	@Autowired
+	@Resource
 	private PublisherService pubService;
-	@Autowired
+	@Resource
 	private UserService usService;
 
 	private PublisherModel publisher;
