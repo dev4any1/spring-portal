@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import net.dev4any1.model.UserModel;
-import net.dev4any1.service.PublisherServiceImpl;
-import net.dev4any1.service.UserServiceImpl;
+import net.dev4any1.service.PublisherService;
+import net.dev4any1.service.UserService;
 
 @Controller
 @RequestMapping("/user")
@@ -22,9 +22,9 @@ public class UserResource {
 	public final static Logger LOG = Logger.getLogger(UserResource.class.getName());
 
 	@Autowired
-	public UserServiceImpl userService;
+	public UserService userService;
 	@Autowired
-	public PublisherServiceImpl pubService;
+	public PublisherService pubService;
 
 	//@Produces(MediaType.APPLICATION_XML)
 	
@@ -43,7 +43,7 @@ public class UserResource {
 	@RequestMapping(value ="/grant/{login}/{name}", method = {RequestMethod.POST, RequestMethod.GET})
 	public ResponseEntity<String> grantPublisher(@PathVariable("login") String login, @PathVariable("name") String name) {
 		Optional<UserModel> user = userService.getByLogin(login);
-		if (user.isEmpty()) {
+		if (!user.isPresent()) {
 			return new ResponseEntity<String>(login + " does not exists", HttpStatus.BAD_REQUEST);
 		}
 		pubService.createPublisher(name, user.get());

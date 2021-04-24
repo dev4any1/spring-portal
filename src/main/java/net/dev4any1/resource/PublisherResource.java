@@ -23,10 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import net.dev4any1.model.CategoryModel;
 import net.dev4any1.model.UserModel;
 import net.dev4any1.pojo.Role;
-import net.dev4any1.service.CategoryServiceImpl;
-import net.dev4any1.service.JournalServiceImpl;
-import net.dev4any1.service.PublisherServiceImpl;
-import net.dev4any1.service.UserServiceImpl;
+import net.dev4any1.service.CategoryService;
+import net.dev4any1.service.JournalService;
+import net.dev4any1.service.PublisherService;
+import net.dev4any1.service.UserService;
 
 @Controller
 @RequestMapping("/publisher")
@@ -35,13 +35,13 @@ public class PublisherResource {
 	public final static Logger LOG = Logger.getLogger(PublisherResource.class.getName());
 
 	@Autowired
-	public UserServiceImpl userService;
+	public UserService userService;
 	@Autowired
-	public CategoryServiceImpl catService;
+	public CategoryService catService;
 	@Autowired
-	public JournalServiceImpl journalService;
+	public JournalService journalService;
 	@Autowired
-	public PublisherServiceImpl pubService;
+	public PublisherService pubService;
 
 	// @Consumes(MediaType.MULTIPART_FORM_DATA)
 	// @Produces(MediaType.APPLICATION_XML)

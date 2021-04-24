@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-
 import net.dev4any1.model.DbObject;
 
 public class BaseDao<T extends DbObject> {

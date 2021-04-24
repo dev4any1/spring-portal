@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import net.dev4any1.model.CategoryModel;
 import net.dev4any1.pojo.Category;
-import net.dev4any1.service.CategoryServiceImpl;
-import net.dev4any1.service.PublisherServiceImpl;
+import net.dev4any1.service.CategoryService;
+import net.dev4any1.service.PublisherService;
 
 @Controller
 @RequestMapping("/category")
@@ -25,9 +25,9 @@ public class CategoryResource {
 	public final static Logger LOG = Logger.getLogger(CategoryResource.class.getName());
 
 	@Autowired
-	public CategoryServiceImpl catService;
+	public CategoryService catService;
 	@Autowired
-	public PublisherServiceImpl pubService;
+	public PublisherService pubService;
 
 	@RequestMapping(value = "/create/{name}", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@PathVariable("name") String name) {

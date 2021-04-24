@@ -2,9 +2,8 @@ package net.dev4any1;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,30 +13,32 @@ import org.springframework.test.context.junit4.SpringRunner;
 import net.dev4any1.model.CategoryModel;
 import net.dev4any1.model.SubscriptionModel;
 import net.dev4any1.model.UserModel;
-import net.dev4any1.service.CategoryServiceImpl;
-import net.dev4any1.service.UserServiceImpl;
+import net.dev4any1.service.CategoryService;
+import net.dev4any1.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class UserServiceTest {
-	@Resource
-	private UserServiceImpl usService;
-	private UserModel user; 
-	@Resource
-	private CategoryServiceImpl catService;
+	@Autowired
+	private UserService usService;
+	@Autowired
+	private CategoryService catService;
     
-    
+	private UserModel user;
+
+    @Before
+    public void init() {
+    	user = usService.createSubscriber("login1", "password1");
+    }
  
 	@Test
 	public void testCreateSubscriber() {
-		user = usService.createSubscriber("login1", "password1");
 		Assert.assertNotNull(user.getId());
 		Assert.assertEquals(user, usService.getByLogin("login1").get());
 	}
 	
 	@Test
 	public void testGetByLogin() {
-		user = usService.createSubscriber("login1", "password1");
 		Assert.assertTrue(usService.getByLogin("login1").isPresent());
 	}
 		
@@ -48,10 +49,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void testSubscribe() {
-		user = usService.createSubscriber("login1", "password1");
 		CategoryModel cat = catService.createCategory("test");
-		//System.out.println(cat.toString());
-		//System.out.println(cat.getId());
 		SubscriptionModel sub = usService.subscribe(user, cat.getId());
 		Assert.assertEquals(user, sub.getUser());
 		Assert.assertEquals(cat, sub.getCategory());

@@ -25,8 +25,8 @@ public class JournalModel extends Journal implements DbObject {
 		return this;
 	}
 
-	public JournalModel withField(String field) {
-		this.field = field;
+	public JournalModel withFileId(String fileId) {
+		this.fileId = fileId;
 		return this;
 	}
 

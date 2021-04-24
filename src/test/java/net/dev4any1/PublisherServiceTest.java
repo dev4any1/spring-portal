@@ -2,20 +2,25 @@ package net.dev4any1;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import net.dev4any1.model.PublisherModel;
 import net.dev4any1.model.UserModel;
 import net.dev4any1.pojo.Role;
-import net.dev4any1.service.PublisherServiceImpl;
-import net.dev4any1.service.UserServiceImpl;
+import net.dev4any1.service.PublisherService;
+import net.dev4any1.service.UserService;
 
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes={SampleWebJspApplication.class})
 public class PublisherServiceTest {
+
 	@Autowired
-    private PublisherServiceImpl pubService = new PublisherServiceImpl();
+    private PublisherService pubService = new PublisherService();
 	@Autowired
-	private UserServiceImpl usService = new UserServiceImpl();
+	private UserService usService = new UserService();
      
 	@Test
 	public void testCreatePublisher() {
