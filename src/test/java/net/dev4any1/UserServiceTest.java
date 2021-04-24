@@ -1,37 +1,33 @@
 package net.dev4any1;
 
 import java.util.List;
-import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import net.dev4any1.dao.BaseDao;
-import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.model.CategoryModel;
 import net.dev4any1.model.SubscriptionModel;
 import net.dev4any1.model.UserModel;
 import net.dev4any1.service.CategoryServiceImpl;
 import net.dev4any1.service.UserServiceImpl;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes={SampleWebJspApplication.class})
 public class UserServiceTest {
-    @Autowired
-	private UserServiceImpl usService = new UserServiceImpl();
-    @Autowired
-	private UserModel user = new UserModel(); 
-    @Autowired
-	private CategoryServiceImpl catService = new CategoryServiceImpl();
-   
-  //  @Before
-  //  public void init() {
-  //  	user = usService.createSubscriber("login1", "password1");
-  //  	CategoryModel cat = catService.createCategory("test");
-  //  }
+	@Resource
+	private UserServiceImpl usService;
+	private UserModel user; 
+	@Resource
+	private CategoryServiceImpl catService;
+    
+    
+ 
 	@Test
 	public void testCreateSubscriber() {
 		user = usService.createSubscriber("login1", "password1");
@@ -39,6 +35,12 @@ public class UserServiceTest {
 		Assert.assertEquals(user, usService.getByLogin("login1").get());
 	}
 	
+	@Test
+	public void testGetByLogin() {
+		user = usService.createSubscriber("login1", "password1");
+		Assert.assertTrue(usService.getByLogin("login1").isPresent());
+	}
+		
 	@Test
 	public void testGetByLoginError() {
 		Assert.assertTrue(!usService.getByLogin("login4").isPresent());
@@ -48,9 +50,9 @@ public class UserServiceTest {
 	public void testSubscribe() {
 		user = usService.createSubscriber("login1", "password1");
 		CategoryModel cat = catService.createCategory("test");
-		System.out.println(cat.toString());
-		System.out.println(cat.getId());
-		SubscriptionModel sub = usService.subscribe(user, cat);
+		//System.out.println(cat.toString());
+		//System.out.println(cat.getId());
+		SubscriptionModel sub = usService.subscribe(user, cat.getId());
 		Assert.assertEquals(user, sub.getUser());
 		Assert.assertEquals(cat, sub.getCategory());
 	}
@@ -64,8 +66,8 @@ public class UserServiceTest {
 	public void testGetSubscription() {
 		CategoryModel cat1 = catService.createCategory("test1");
 		CategoryModel cat2 = catService.createCategory("test2");
-		usService.subscribe(user, cat1);
-		usService.subscribe(user, cat2);
+		usService.subscribe(user, cat1.getId());
+		usService.subscribe(user, cat2.getId());
 		List<SubscriptionModel> subList = usService.getSubscription(user);
 		for (SubscriptionModel sub : subList) {
 			Assert.assertEquals(user, sub.getUser());

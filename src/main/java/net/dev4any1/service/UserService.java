@@ -11,7 +11,7 @@ import net.dev4any1.model.UserModel;
 
 public interface UserService {
 
-	public SubscriptionModel subscribe(UserModel user, CategoryModel cat);
+	public SubscriptionModel subscribe(UserModel user, Long categoryId);
 
 	public UserModel createSubscriber(String login, String password);
 

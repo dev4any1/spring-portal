@@ -22,11 +22,11 @@ import net.dev4any1.pojo.Role;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserServiceImpl implements UserService {
 	@Autowired
-	private UserDao userDao = new UserDao();
+	private UserDao userDao;// = new UserDao();
 	@Autowired
-	private CategoryDao catDao = new CategoryDao();
+	private CategoryDao catDao;// = new CategoryDao();
 	@Autowired
-	private SubscriptionDao subscripDao = new SubscriptionDao();
+	private SubscriptionDao subscripDao;// = new SubscriptionDao();
 	
 	public UserModel createSubscriber(String login, String password) {
 		UserModel user = new UserModel();
@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
 	public Optional<UserModel> getByLogin(String login) {
 		for (UserModel object : userDao.getAll()) {
 			if (object.getLogin().equals(login)) {
+				System.out.println(object.toString());
 				return Optional.ofNullable(object);
 			}
 		}
@@ -46,12 +47,12 @@ public class UserServiceImpl implements UserService {
 		return Optional.ofNullable(null);
 	}
 
-	
-	public SubscriptionModel subscribe(UserModel user, CategoryModel cat) {
+	public SubscriptionModel subscribe(UserModel user, Long categoryId) {
 		System.out.println(user.toString());
-		//CategoryModel cat = catDao.get(categoryId);
+		CategoryModel cat = catDao.get(categoryId);
+		//System.out.println(cat.toString());
 		if (cat == null) {
-			throw new Error("category with id " + cat + " was not found");
+			throw new Error("category with id " + categoryId + " was not found");
 		} else {
 			SubscriptionModel sub = new SubscriptionModel();
 			sub.setCategory(cat);
