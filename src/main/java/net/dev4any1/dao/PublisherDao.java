@@ -1,9 +1,12 @@
 package net.dev4any1.dao;
 
-import org.springframework.stereotype.Component;
+import java.util.Optional;
 
-import net.dev4any1.model.PublisherModel;
-@Component
-public class PublisherDao extends BaseDao<PublisherModel> {
-	
+import org.springframework.data.repository.CrudRepository;
+
+import net.dev4any1.model.Publisher;
+import net.dev4any1.model.User;
+
+public interface  PublisherDao extends CrudRepository<Publisher, Long> {
+	Optional<Publisher> findByUser(User user);
 }

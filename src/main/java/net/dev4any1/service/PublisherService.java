@@ -1,36 +1,37 @@
 package net.dev4any1.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import net.dev4any1.dao.PublisherDao;
-import net.dev4any1.model.PublisherModel;
-import net.dev4any1.pojo.Role;
-import net.dev4any1.pojo.User;
+import net.dev4any1.model.Publisher;
+import net.dev4any1.model.Role;
+import net.dev4any1.model.User;
 
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class PublisherService{
 	@Autowired
-	private PublisherDao pubDao = new PublisherDao();
+	private PublisherDao pubDao;
 
-	public PublisherModel createPublisher(String name, User user) {
-		PublisherModel publisher = new PublisherModel();
-		user.setRole(Role.PUBLISHER.name());
+	public Publisher createPublisher(String name, User user) {
+		Publisher publisher = new Publisher();
+		user.setRole(Role.PUBLISHER);
 		publisher.setName(name);
 		publisher.setUser(user);
-		return pubDao.upsert(publisher); 
+		return pubDao.save(publisher); 
 	}
 
-	public PublisherModel getPublisher(User user) {
-		for (PublisherModel pub: pubDao.getAll()) {
-			if (pub.getUser().equals(user)) {
-				return pub;
-			}
+	public Publisher getPublisher(User user) {
+		Optional<Publisher> pub = pubDao.findByUser(user);
+		if (!pub.isPresent()) {
+			throw new ServiceException("User " + user.getLogin() + " is not a Publisher!");
 		}
-		return null;
+		return pub.get();
 	}
 
 }

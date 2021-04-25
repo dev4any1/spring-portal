@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import net.dev4any1.model.UserModel;
+import net.dev4any1.dao.UserDao;
+import net.dev4any1.model.User;
 import net.dev4any1.service.PublisherService;
 import net.dev4any1.service.UserService;
 
@@ -22,6 +23,8 @@ public class UserResource {
 	public final static Logger LOG = Logger.getLogger(UserResource.class.getName());
 
 	@Autowired
+	public UserDao userDao;
+	@Autowired
 	public UserService userService;
 	@Autowired
 	public PublisherService pubService;
@@ -30,19 +33,19 @@ public class UserResource {
 	
 	@RequestMapping(value ="/create/{login}/{password}", method = {RequestMethod.POST, RequestMethod.GET})
 	public ResponseEntity<String> create(@PathVariable("login") String login, @PathVariable("password") String password) {
-		if (userService.getByLogin(login).isPresent()) {
+		if (userDao.findByLogin(login).isPresent()) {
 			return new ResponseEntity<String>(login + " user already exists", HttpStatus.BAD_REQUEST);
 		}
-		UserModel user = userService.createSubscriber(login, password);
+		User user = userService.createSubscriber(login, password);
         LOG.info("user " + user.getLogin() + " was successfully created");
-		return new ResponseEntity<String>(UserModel.toUser(user).toString(), HttpStatus.OK); //entity(UserModel.toUser(user)).build();
+		return new ResponseEntity<String>(user.toString(), HttpStatus.OK); //entity(User.toUser(user)).build();
        
 	}
 	
 	//@Produces(MediaType.APPLICATION_XML)
 	@RequestMapping(value ="/grant/{login}/{name}", method = {RequestMethod.POST, RequestMethod.GET})
 	public ResponseEntity<String> grantPublisher(@PathVariable("login") String login, @PathVariable("name") String name) {
-		Optional<UserModel> user = userService.getByLogin(login);
+		Optional<User> user = userDao.findByLogin(login);
 		if (!user.isPresent()) {
 			return new ResponseEntity<String>(login + " does not exists", HttpStatus.BAD_REQUEST);
 		}

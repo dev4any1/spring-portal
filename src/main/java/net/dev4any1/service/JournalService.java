@@ -1,45 +1,45 @@
 package net.dev4any1.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.dao.JournalDao;
-import net.dev4any1.model.CategoryModel;
-import net.dev4any1.model.JournalModel;
-import net.dev4any1.model.PublisherModel;
-import net.dev4any1.model.SubscriptionModel;
-import net.dev4any1.model.UserModel;
-import net.dev4any1.pojo.Category;
-import net.dev4any1.pojo.Journal;
+import net.dev4any1.model.Category;
+import net.dev4any1.model.Journal;
+import net.dev4any1.model.Journal;
+import net.dev4any1.model.Publisher;
+import net.dev4any1.model.Subscription;
+import net.dev4any1.model.User;
 
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class JournalService{
 	@Autowired
-	private JournalDao journalDao = new JournalDao();
+	private JournalDao journalDao;
 	@Autowired
-	private UserService userService = new UserService();
-	@Autowired
-	private CategoryDao catDao = new CategoryDao();
+	private CategoryDao catDao;
 
-	public List<JournalModel> listAll(UserModel user) {
-		List<SubscriptionModel> subList = userService.getSubscription(user);
-		Set<CategoryModel> catSet = new HashSet<CategoryModel>();
-		for (SubscriptionModel sub : subList) {
-			catSet.add((CategoryModel) sub.getCategory());
+	public List<Journal> listAll(User user) {
+		List<Subscription> subList = user.getSubscriptions();
+		Set<Category> catSet = new HashSet<Category>();
+		for (Subscription sub : subList) {
+			catSet.add((Category) sub.getCategory());
 		}
-		List<JournalModel> journalList = new ArrayList<JournalModel>();
-		for (JournalModel journal : journalDao.getAll()) {
+		List<Journal> journalList = new ArrayList<Journal>();
+		for (Journal journal : journalDao.findAll()) {
 			if (catSet.contains(journal.getCategory())) {
 				journalList.add(journal);
 			}
@@ -47,47 +47,48 @@ public class JournalService{
 		return journalList;
 	}
 
-	public List<JournalModel> publisherList(PublisherModel publisher) {
-		List<JournalModel> journalList = new ArrayList<JournalModel>();
-		for (JournalModel journal : journalDao.getAll()) {
-			if (journal.getPublisher().equals(publisher)) {
-				journalList.add(journal);
-			}
-		}
+	public List<Journal> publisherList(Publisher publisher) {
+		List<Journal> journalList = new ArrayList<Journal>();
+		journalList.addAll(journalDao.findByPublisher(publisher));
 		return journalList;
-
 	}
 
-	public JournalModel publish(PublisherModel publisher, String fileName, Long categoryId, Date publishedAt) {
-		Category cat = catDao.get(categoryId);
+	public Journal publish(Publisher publisher, String fileName, String catName, Date publishedAt) {
+		Optional<Category> cat = catDao.findByName(catName);
 		if (cat == null) {
-			throw new Error("unable to publish journal, category with id " + categoryId + " not found");
+			throw new ServiceException("unable to publish journal, category " + catName + " not found");
 		}
-		JournalModel journal = new JournalModel();
+		Journal journal = new Journal();
 		journal.setName(fileName);
 		journal.setPublisher(publisher);
-		journal.setCategory(cat);
+		journal.setCategory(cat.get());
 		journal.setPublishedAt(publishedAt);
-		return journalDao.upsert(journal);
+		return journalDao.save(journal);
 	}
 
-	public void unPublish(PublisherModel publisher, Long journalId) {
-		Journal journal = journalDao.get(journalId);
-		if (journalDao.get(journalId) == null) {
-			throw new Error("unable to unpublish journal, journal " + journalId + " not found");
+	public void unPublish(Publisher publisher, Long journalId) {
+		Journal journal = journalDao.findOne(journalId);
+		if (journal == null) {
+			throw new ServiceException("unable to unpublish journal, journal " + journalId + " not found");
 		}
 		if (!journal.getPublisher().getId().equals(publisher.getId())) {
-			throw new Error("unable to unpublish journal, publisher  " + publisher.getName() + " is lier");
+			throw new ServiceException("unable to unpublish journal, publisher  " + publisher.getName() + " is lier");
 		}
 		journalDao.delete(journalId);
 	}
 
-	public List<JournalModel> getNewByCategory(Long categoryId) {
-			// check categoryId exist
-		if (catDao.get(categoryId) == null) {
-			throw new Error("unable to add journal in category, category " + categoryId + " not exist");
-		}	
-		return journalDao.getLastPosts(categoryId);
-	} 
+	@Transactional(readOnly = true)
+	public List<Journal> getNewByCategory(Long categoryId) {
+		if (catDao.findOne(categoryId) == null) {
+			throw new ServiceException("unable to add journal in category, category " + categoryId + " not exist");
+		}
+		LocalDateTime now = LocalDateTime.now();
+		Date newPeriodEnd = localDateToDateWithDefaultTz(now);
+		Date newPeriodStart = localDateToDateWithDefaultTz(now.minusDays(1L));
+		return journalDao.findByCategoryIdAndPublishedAtBetween(categoryId, newPeriodEnd, newPeriodStart);
+	}
 
+	private Date localDateToDateWithDefaultTz(LocalDateTime localDate) {
+		return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+	}
 }

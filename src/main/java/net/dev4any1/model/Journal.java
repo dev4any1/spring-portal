@@ -1,81 +1,79 @@
-package net.dev4any1.pojo;
+package net.dev4any1.model;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+
+@Entity
 public class Journal {
-	protected Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	@Column(nullable = false)
 	protected String name;
+	@Column(nullable = false)
 	protected String fileId;
+	@Column(nullable = false)
 	protected Date publishedAt;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "category_id")
 	protected Category category;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "publisher_id")
 	protected Publisher publisher;
-
+	@PrePersist
+	void onPersist() {
+		this.publishedAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+	}
 	public Long getId() {
 		return id;
 	}
-	
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 	public String getName() {
 		return name;
 	}
-	
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 	public String getFileId() {
 		return fileId;
 	}
-	
-	public void setFileId(String field) {
-		this.fileId = field;
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
 	}
-	
 	public Date getPublishedAt() {
 		return publishedAt;
 	}
-	
 	public void setPublishedAt(Date publishedAt) {
 		this.publishedAt = publishedAt;
 	}
-	
 	public Category getCategory() {
 		return category;
 	}
-	
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-	
 	public Publisher getPublisher() {
 		return publisher;
 	}
-
 	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
 	}
-
-	@Override
-	public String toString() {
-		return "Journal [id=" + id + ", name=" + name + ", field=" + fileId + ", publishedAt=" + publishedAt
-				+ ", category=" + category + ", publisher=" + publisher + "]";
-	}
-	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((fileId == null) ? 0 : fileId.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((publishedAt == null) ? 0 : publishedAt.hashCode());
-		result = prime * result + ((publisher == null) ? 0 : publisher.hashCode());
-		return result;
+		return Objects.hash(id, name, fileId, publishedAt, category, publisher);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -117,4 +115,5 @@ public class Journal {
 			return false;
 		return true;
 	}
+	
 }

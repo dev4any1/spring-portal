@@ -16,15 +16,10 @@
 
 package net.dev4any1;
 
-import javax.servlet.MultipartConfigElement;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
-
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -42,12 +37,12 @@ public class SampleWebJspApplication extends SpringBootServletInitializer {
 		SpringApplication.run(SampleWebJspApplication.class, args);
 	}
 
-	@Bean(name = "multipartResolver")
-	public MultipartConfigElement multipartConfigElement(){
-	    MultipartConfigFactory multipartConfigFactory = new MultipartConfigFactory();
-	    multipartConfigFactory.setMaxFileSize("10MB");
-	    multipartConfigFactory.setMaxRequestSize("50MB");
-	    return multipartConfigFactory.createMultipartConfig();
-	}
+	/*
+	 * @Bean(name = "multipartResolver") public MultipartConfigElement
+	 * multipartConfigElement(){ MultipartConfigFactory multipartConfigFactory = new
+	 * MultipartConfigFactory(); multipartConfigFactory.setMaxFileSize("10MB");
+	 * multipartConfigFactory.setMaxRequestSize("50MB"); return
+	 * multipartConfigFactory.createMultipartConfig(); }
+	 */
 	
 }

@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.dev4any1.model.PublisherModel;
-import net.dev4any1.model.UserModel;
-import net.dev4any1.pojo.Role;
+import net.dev4any1.model.Publisher;
+import net.dev4any1.model.Role;
+import net.dev4any1.model.User;
 import net.dev4any1.service.PublisherService;
 import net.dev4any1.service.UserService;
 
@@ -25,8 +25,8 @@ public class PublisherServiceTest {
      
 	@Test
 	public void testCreatePublisher() {
-		UserModel user = usService.createSubscriber("login", "password");
-		PublisherModel publisher = pubService.createPublisher("toxa", user);
+		User user = usService.createSubscriber("login", "password");
+		Publisher publisher = pubService.createPublisher("toxa", user);
 		Assert.assertEquals(user.getRole(), Role.PUBLISHER.name());
 		Assert.assertEquals("toxa", publisher.getName());
 		Assert.assertEquals(user, publisher.getUser());;
@@ -34,15 +34,15 @@ public class PublisherServiceTest {
 	
 	@Test
 	public void testGetPublisher() {
-		UserModel user = usService.createSubscriber("login", "password");
-		PublisherModel publisher = pubService.createPublisher("toxa", user);
+		User user = usService.createSubscriber("login", "password");
+		Publisher publisher = pubService.createPublisher("toxa", user);
 		Assert.assertEquals(pubService.getPublisher(user), publisher);
 	}
 	
 	@Test(expected = Error.class)
 	public void testGetPublisherException() {
-		UserModel user = usService.createSubscriber("login", "password");
-		PublisherModel publisher = pubService.createPublisher("toxa", user);
+		User user = usService.createSubscriber("login", "password");
+		Publisher publisher = pubService.createPublisher("toxa", user);
 		Assert.assertEquals(pubService.getPublisher(null), publisher);
 	}
 }

@@ -1,10 +1,11 @@
 package net.dev4any1.dao;
 
-import org.springframework.stereotype.Component;
+import java.util.Optional;
 
-import net.dev4any1.model.UserModel;
+import org.springframework.data.repository.CrudRepository;
 
-@Component
-public class UserDao extends BaseDao<UserModel> {
+import net.dev4any1.model.User;
 
+public interface  UserDao extends CrudRepository<User, Long> {
+	Optional<User> findByLogin(String login);
 }

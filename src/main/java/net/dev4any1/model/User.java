@@ -1,68 +1,72 @@
-package net.dev4any1.pojo;
+package net.dev4any1.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+@Entity
 public class User implements Serializable {
 	private static final long serialVersionUID = User.class.getName().hashCode();
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(nullable = false)
 	private String login;
+	@Column(nullable = false)
 	private String password;
-	private String role;
+	@Column(name = "role", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@Cascade(CascadeType.ALL)
 	private List<Subscription> subscriptions;
-
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getLogin() {
 		return login;
 	}
-
 	public void setLogin(String login) {
 		this.login = login;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
-
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
-
-	public List<Subscription> getSubscriptions(List<Subscription> subscribtions) {
+	public List<Subscription> getSubscriptions() {
 		return subscriptions;
 	}
-
 	public void setSubscriptions(List<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
 	}
-
-	public User getUser() {
-		return this;
-	}
-	@Override
-	public String toString() {
-		return "User [login=" + login + ", password=" + password + ", role=" + role + ", subscriptions=" + subscriptions
-				+ "]";
-	}
-
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((login == null) ? 0 : login.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((subscriptions == null) ? 0 : subscriptions.hashCode());
-		return result;
+		return Objects.hash(id, login, password, role, subscriptions);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -72,6 +76,11 @@ public class User implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (login == null) {
 			if (other.login != null)
 				return false;
@@ -82,10 +91,7 @@ public class User implements Serializable {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (role == null) {
-			if (other.role != null)
-				return false;
-		} else if (!role.equals(other.role))
+		if (role != other.role)
 			return false;
 		if (subscriptions == null) {
 			if (other.subscriptions != null)
@@ -95,4 +101,5 @@ public class User implements Serializable {
 		return true;
 	}
 
+	
 }

@@ -1,18 +1,11 @@
 package net.dev4any1.dao;
 
-import org.springframework.stereotype.Component;
+import java.util.Optional;
 
-import net.dev4any1.model.CategoryModel;
+import org.springframework.data.repository.CrudRepository;
 
-@Component
-public class CategoryDao extends BaseDao<CategoryModel> {
+import net.dev4any1.model.Category;
 
-	public CategoryModel getByName(String name) {
-		for (CategoryModel cat : getAll()) {
-			if (cat.getName().equals(name)) {
-				return cat;
-			}
-		}
-		return null;
-	}  
+public interface CategoryDao extends CrudRepository<Category, Long> {
+	Optional<Category> findByName(String name);
 }

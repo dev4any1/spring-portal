@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import net.dev4any1.model.CategoryModel;
-import net.dev4any1.pojo.Category;
+import net.dev4any1.dao.CategoryDao;
+import net.dev4any1.model.Category;
 import net.dev4any1.service.CategoryService;
 import net.dev4any1.service.PublisherService;
 
@@ -23,7 +23,8 @@ import net.dev4any1.service.PublisherService;
 public class CategoryResource {
 
 	public final static Logger LOG = Logger.getLogger(CategoryResource.class.getName());
-
+	@Autowired
+	public CategoryDao catDao;
 	@Autowired
 	public CategoryService catService;
 	@Autowired
@@ -31,10 +32,10 @@ public class CategoryResource {
 
 	@RequestMapping(value = "/create/{name}", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@PathVariable("name") String name) {
-		if (catService.getByName(name) != null) {
+		if (catDao.findByName(name) != null) {
 			return new ResponseEntity<String>("category " + name + " already exists", HttpStatus.BAD_REQUEST);
 		}
-		CategoryModel category = catService.createCategory(name);
+		Category category = catService.createCategory(name);
 		LOG.info("category " + category.getName() + " was successfully created");
 		return new ResponseEntity<String>("category " + name + " is created", HttpStatus.OK);
 	}
@@ -42,10 +43,9 @@ public class CategoryResource {
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<List<Category>> list() {
 		List<Category> categoryList = new ArrayList<Category>();
-		categoryList.addAll(catService.getAll());
+		catDao.findAll().forEach(categoryList::add);
 		ResponseEntity<List<Category>> entity = new ResponseEntity<List<Category>>(categoryList, HttpStatus.OK) {
 		};
-		LOG.info("categoryList: " + categoryList);
 		return entity;
 	}
 
