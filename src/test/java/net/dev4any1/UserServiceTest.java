@@ -15,6 +15,7 @@ import net.dev4any1.model.Category;
 import net.dev4any1.model.Subscription;
 import net.dev4any1.model.User;
 import net.dev4any1.service.CategoryService;
+import net.dev4any1.service.ServiceException;
 import net.dev4any1.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -30,23 +31,13 @@ public class UserServiceTest {
     
     @Before
     public void init() {
-    	user = usService.createSubscriber("login1", "password1");
+       user = usService.createSubscriber("login", "password");
     }
  
 	@Test
 	public void testCreateSubscriber() {
 		Assert.assertNotNull(user.getId());
-		Assert.assertEquals(user, usDao.findByLogin("login1").get());
-	}
-	
-	@Test
-	public void testGetByLogin() {
-		Assert.assertTrue(usDao.findByLogin("login1").isPresent());
-	}
-		
-	@Test
-	public void testGetByLoginError() {
-		Assert.assertTrue(!usDao.findByLogin("login4").isPresent());
+		Assert.assertEquals(user, usDao.findByLogin("login").get());
 	}
 	
 	@Test
@@ -57,12 +48,12 @@ public class UserServiceTest {
 		Assert.assertEquals(cat, sub.getCategory());
 	}
 
-	@Test(expected = Error.class)
+	@Test(expected = ServiceException.class)
 	public void testSubscribeException() {
-		usService.subscribe(user, null);
+		usService.subscribe(user, 26l);
 	}
 	
-	@Test
+/*	@Test
 	public void testGetSubscription() {
 		Category cat1 = catService.createCategory("test1");
 		Category cat2 = catService.createCategory("test2");
@@ -70,5 +61,6 @@ public class UserServiceTest {
 		usService.subscribe(user, cat1.getId());
 		usService.subscribe(user, cat2.getId());
 		Assert.assertTrue(user.getSubscriptions().size() == subCount+2);
-	}
+	}  
+*/
 }

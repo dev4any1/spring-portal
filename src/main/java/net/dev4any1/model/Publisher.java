@@ -72,4 +72,8 @@ public class Publisher {
 		return true;
 	}
 
+	 @Override
+		public String toString() {
+			return "Publisher [id=" + id + ", user=" + user.toString() + ", name=" + name + "]";
+		}
 }

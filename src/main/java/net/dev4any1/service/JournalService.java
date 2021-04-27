@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.dao.JournalDao;
+import net.dev4any1.dao.SubscriptionDao;
 import net.dev4any1.model.Category;
 import net.dev4any1.model.Journal;
 import net.dev4any1.model.Journal;
@@ -31,9 +32,11 @@ public class JournalService{
 	private JournalDao journalDao;
 	@Autowired
 	private CategoryDao catDao;
+	@Autowired
+	private SubscriptionDao subDao;
 
 	public List<Journal> listAll(User user) {
-		List<Subscription> subList = user.getSubscriptions();
+		List<Subscription> subList = subDao.findAllByUser(user); //user.getSubscriptions()
 		Set<Category> catSet = new HashSet<Category>();
 		for (Subscription sub : subList) {
 			catSet.add((Category) sub.getCategory());
@@ -53,15 +56,16 @@ public class JournalService{
 		return journalList;
 	}
 
-	public Journal publish(Publisher publisher, String fileName, String catName, Date publishedAt) {
+	public Journal publish(Publisher publisher, String name, String catName, Date publishedAt) {
 		Optional<Category> cat = catDao.findByName(catName);
-		if (cat == null) {
+		if (cat.isEmpty()) {    //(cat == null)        
 			throw new ServiceException("unable to publish journal, category " + catName + " not found");
 		}
 		Journal journal = new Journal();
-		journal.setName(fileName);
+		journal.setfileId(name + ".file");  // need some fileId
 		journal.setPublisher(publisher);
-		journal.setCategory(cat.get());
+		journal.setName(name);
+		journal.setCategory(cat.get());  
 		journal.setPublishedAt(publishedAt);
 		return journalDao.save(journal);
 	}

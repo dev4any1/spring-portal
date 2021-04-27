@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 
 @Entity
@@ -20,14 +21,14 @@ public class Journal {
 	private Long id;
 	@Column(nullable = false)
 	protected String name;
-	@Column(nullable = false)
-	protected String fileId;
+	@Column(nullable = false)    
+	protected String fileId;   
 	@Column(nullable = false)
 	protected Date publishedAt;
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "category_id")
 	protected Category category;
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false)    
 	@JoinColumn(name = "publisher_id")
 	protected Publisher publisher;
 	@PrePersist
@@ -46,10 +47,10 @@ public class Journal {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getFileId() {
+	public String getfileId() {
 		return fileId;
 	}
-	public void setFileId(String fileId) {
+	public void setfileId(String fileId) {
 		this.fileId = fileId;
 	}
 	public Date getPublishedAt() {

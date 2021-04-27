@@ -1,6 +1,8 @@
 package net.dev4any1.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -46,11 +48,11 @@ public class UserService {
 			return subscripDao.save(sub);
 		}
 	}
-/*
-	public List<Subscription> getSubscription(User user) {
+
+/*	public List<Subscription> getSubscription(User user) {
 		List<Subscription> subList = new ArrayList<Subscription>();
-		subscripDao.
-		for (Subscription sub : subscripDao.getAll()) {
+		//subscripDao.)
+		for (Subscription sub : subscripDao.findAll()) {
 			if (sub.getUser().equals(user)) {
 				subList.add(sub);
 			}

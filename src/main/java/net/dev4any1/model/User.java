@@ -101,5 +101,9 @@ public class User implements Serializable {
 		return true;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "User [login=" + login + ", password=" + password + ", role=" + role + ", subscriptions="
+				+ subscriptions + "]";
+	}	
 }
