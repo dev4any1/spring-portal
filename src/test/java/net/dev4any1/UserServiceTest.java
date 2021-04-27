@@ -49,6 +49,7 @@ public class UserServiceTest {
 		Assert.assertEquals(user, sub.getUser());
 		Assert.assertEquals(cat, sub.getCategory());
 	}
+
 	
 	@Test
 	public void testGetSubscription() {

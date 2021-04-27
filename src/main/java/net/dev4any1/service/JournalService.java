@@ -5,10 +5,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.dao.JournalDao;
+import net.dev4any1.dao.SubscriptionDao;
 import net.dev4any1.model.Category;
-import net.dev4any1.model.Journal;
 import net.dev4any1.model.Journal;
 import net.dev4any1.model.Publisher;
 import net.dev4any1.model.Subscription;
@@ -33,6 +30,8 @@ public class JournalService{
 	private JournalDao journalDao;
 	@Autowired
 	private CategoryDao catDao;
+	@Autowired
+	private SubscriptionDao subDao;
 
 	@Transactional(readOnly = true)	
 	public List<Journal> getUserList(User user) {

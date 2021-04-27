@@ -89,6 +89,7 @@ public class JournalServiceTest {
 		Assert.assertEquals(3, journalList.size());
 	}
 
+	
 	@Test
 	public void testCreate() {
 		Category category = catService.createCategory("createJournal");

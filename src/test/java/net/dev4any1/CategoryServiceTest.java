@@ -20,16 +20,11 @@ public class CategoryServiceTest {
 	private CategoryService service;
     @Autowired
 	private CategoryDao dao;
+    
 	@Test
 	public void testCreateCategory() {
 		Category cat = service.createCategory("name");
 		Assert.assertNotNull(cat.getId());
 		Assert.assertTrue(dao.findByName("name").isPresent());
-	}
-
-	@Test
-	public void testGetByName() {
-		Category cat1 = service.createCategory("name1");
-		Assert.assertEquals(dao.findByName("name1").get(), cat1);
 	}
 }

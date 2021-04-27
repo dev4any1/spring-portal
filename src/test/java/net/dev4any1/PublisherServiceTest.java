@@ -23,9 +23,10 @@ public class PublisherServiceTest {
     private PublisherService pubService = new PublisherService();
 	@Resource
 	private UserService usService = new UserService();
-     
+	 
 	@Test
 	public void testCreatePublisher() {
+
 		User user = usService.createSubscriber("apublisher", "password");
 		Publisher publisher = pubService.createPublisher("author", user);
 		Assert.assertEquals(user.getRole(), Role.PUBLISHER);
@@ -35,6 +36,7 @@ public class PublisherServiceTest {
 	
 	@Test
 	public void testGetPublisher() {
+
 		User user = usService.createSubscriber("publisheruser", "password");
 		Publisher publisher = pubService.createPublisher("theman", user);
 		Assert.assertEquals(pubService.getPublisher(user).getId(), publisher.getId());
