@@ -1,5 +1,7 @@
 package net.dev4any1;
 
+import javax.annotation.Resource;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +16,7 @@ import net.dev4any1.service.CategoryService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class CategoryServiceTest {
-    @Autowired
+    @Resource
 	private CategoryService service;
     @Autowired
 	private CategoryDao dao;
@@ -28,7 +30,6 @@ public class CategoryServiceTest {
 	@Test
 	public void testGetByName() {
 		Category cat1 = service.createCategory("name1");
-		Assert.assertEquals(dao.findByName("name1"), cat1);
-		Assert.assertNotEquals(dao.findByName("name4"), cat1);
+		Assert.assertEquals(dao.findByName("name1").get(), cat1);
 	}
 }

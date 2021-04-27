@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.dao.SubscriptionDao;
 import net.dev4any1.dao.UserDao;
 import net.dev4any1.model.Category;
@@ -21,10 +21,9 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	@Autowired
-	private CategoryDao catDao;
-	@Autowired
 	private SubscriptionDao subscripDao;
-	
+
+	@Transactional
 	public User createSubscriber(String login, String password) {
 		User user = new User();
 		user.setLogin(login);
@@ -33,29 +32,12 @@ public class UserService {
 		return userDao.save(user);
 	}
 
-	public Subscription subscribe(User user, Long categoryId) {
-		System.out.println(user.toString());
-		Category cat = catDao.findOne(categoryId);
-		if (cat == null) {
-			throw new ServiceException("category with id " + categoryId + " was not found");
-		} else {
-			Subscription sub = new Subscription();
-			sub.setCategory(cat);
-			sub.setUser(user);
-			sub.setCreatedAt(new Date());
-			return subscripDao.save(sub);
-		}
+	@Transactional
+	public Subscription subscribe(User user, Category category) {
+		Subscription sub = new Subscription();
+		sub.setCategory(category);
+		sub.setUser(user);
+		sub.setCreatedAt(new Date());
+		return subscripDao.save(sub);
 	}
-/*
-	public List<Subscription> getSubscription(User user) {
-		List<Subscription> subList = new ArrayList<Subscription>();
-		subscripDao.
-		for (Subscription sub : subscripDao.getAll()) {
-			if (sub.getUser().equals(user)) {
-				subList.add(sub);
-			}
-		}
-		return subList;
-	}
-*/
 }

@@ -71,5 +71,4 @@ public class Publisher {
 			return false;
 		return true;
 	}
-
 }

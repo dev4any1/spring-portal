@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.dev4any1.dao.CategoryDao;
 import net.dev4any1.model.Category;
@@ -15,6 +16,7 @@ public class CategoryService {
 	@Autowired
 	private CategoryDao dao;
 
+	@Transactional
 	public Category createCategory(String name) {
 		Category cat = new Category();
 		cat.setName(name);

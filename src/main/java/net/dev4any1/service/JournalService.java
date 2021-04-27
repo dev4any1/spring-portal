@@ -3,6 +3,7 @@ package net.dev4any1.service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -27,52 +28,49 @@ import net.dev4any1.model.User;
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class JournalService{
+
 	@Autowired
 	private JournalDao journalDao;
 	@Autowired
 	private CategoryDao catDao;
 
-	public List<Journal> listAll(User user) {
-		List<Subscription> subList = user.getSubscriptions();
-		Set<Category> catSet = new HashSet<Category>();
-		for (Subscription sub : subList) {
-			catSet.add((Category) sub.getCategory());
+	@Transactional(readOnly = true)	
+	public List<Journal> getUserList(User user) {
+		List<Subscription> subscriptions = user.getSubscriptions();
+		if (subscriptions != null) {
+			List<Long> ids = new ArrayList<>(subscriptions.size());
+			subscriptions.stream().forEach(s -> ids.add(s.getCategory().getId()));
+			return journalDao.findByCategoryIdIn(ids);
+		} else {
+			return Collections.emptyList();
 		}
-		List<Journal> journalList = new ArrayList<Journal>();
-		for (Journal journal : journalDao.findAll()) {
-			if (catSet.contains(journal.getCategory())) {
-				journalList.add(journal);
-			}
-		}
-		return journalList;
 	}
 
-	public List<Journal> publisherList(Publisher publisher) {
+	@Transactional(readOnly = true)
+	public List<Journal> getPublisherList(Publisher publisher) {
 		List<Journal> journalList = new ArrayList<Journal>();
 		journalList.addAll(journalDao.findByPublisher(publisher));
 		return journalList;
 	}
 
-	public Journal publish(Publisher publisher, String fileName, String catName, Date publishedAt) {
-		Optional<Category> cat = catDao.findByName(catName);
-		if (cat == null) {
-			throw new ServiceException("unable to publish journal, category " + catName + " not found");
-		}
+	@Transactional
+	public Journal create(Publisher publisher, String title, String fileName, Category category) {
 		Journal journal = new Journal();
-		journal.setName(fileName);
+		journal.setTitle(title);
+		journal.setFileId(fileName);
 		journal.setPublisher(publisher);
-		journal.setCategory(cat.get());
-		journal.setPublishedAt(publishedAt);
+		journal.setCategory(category);
 		return journalDao.save(journal);
 	}
 
-	public void unPublish(Publisher publisher, Long journalId) {
+	@Transactional
+	public void delete(Publisher publisher, Long journalId) {
 		Journal journal = journalDao.findOne(journalId);
 		if (journal == null) {
-			throw new ServiceException("unable to unpublish journal, journal " + journalId + " not found");
+			throw new ServiceException("unable to delete journal, journal " + journalId + " not found");
 		}
 		if (!journal.getPublisher().getId().equals(publisher.getId())) {
-			throw new ServiceException("unable to unpublish journal, publisher  " + publisher.getName() + " is lier");
+			throw new ServiceException("unable to delete journal, " + publisher.getName() + " isn't an owner");
 		}
 		journalDao.delete(journalId);
 	}

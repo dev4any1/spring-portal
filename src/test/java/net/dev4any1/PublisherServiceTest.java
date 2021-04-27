@@ -12,6 +12,7 @@ import net.dev4any1.model.Publisher;
 import net.dev4any1.model.Role;
 import net.dev4any1.model.User;
 import net.dev4any1.service.PublisherService;
+import net.dev4any1.service.ServiceException;
 import net.dev4any1.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -25,24 +26,23 @@ public class PublisherServiceTest {
      
 	@Test
 	public void testCreatePublisher() {
-		User user = usService.createSubscriber("login", "password");
-		Publisher publisher = pubService.createPublisher("toxa", user);
-		Assert.assertEquals(user.getRole(), Role.PUBLISHER.name());
-		Assert.assertEquals("toxa", publisher.getName());
+		User user = usService.createSubscriber("apublisher", "password");
+		Publisher publisher = pubService.createPublisher("author", user);
+		Assert.assertEquals(user.getRole(), Role.PUBLISHER);
+		Assert.assertEquals("author", publisher.getName());
 		Assert.assertEquals(user, publisher.getUser());;
 	}
 	
 	@Test
 	public void testGetPublisher() {
-		User user = usService.createSubscriber("login", "password");
-		Publisher publisher = pubService.createPublisher("toxa", user);
-		Assert.assertEquals(pubService.getPublisher(user), publisher);
+		User user = usService.createSubscriber("publisheruser", "password");
+		Publisher publisher = pubService.createPublisher("theman", user);
+		Assert.assertEquals(pubService.getPublisher(user).getId(), publisher.getId());
 	}
 	
-	@Test(expected = Error.class)
+	@Test(expected = ServiceException.class)
 	public void testGetPublisherException() {
-		User user = usService.createSubscriber("login", "password");
-		Publisher publisher = pubService.createPublisher("toxa", user);
-		Assert.assertEquals(pubService.getPublisher(null), publisher);
+		User user = usService.createSubscriber("notapublisher", "password");
+		pubService.getPublisher(user);
 	}
 }

@@ -23,7 +23,7 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String login;
 	@Column(nullable = false)
 	private String password;
@@ -92,11 +92,6 @@ public class User implements Serializable {
 		} else if (!password.equals(other.password))
 			return false;
 		if (role != other.role)
-			return false;
-		if (subscriptions == null) {
-			if (other.subscriptions != null)
-				return false;
-		} else if (!subscriptions.equals(other.subscriptions))
 			return false;
 		return true;
 	}

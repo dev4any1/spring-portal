@@ -1,9 +1,10 @@
 package net.dev4any1;
 
-import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Resource;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,55 +21,44 @@ import net.dev4any1.service.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={SampleWebJspApplication.class})
 public class UserServiceTest {
-	@Autowired
+	@Resource
 	private UserService usService;
 	@Autowired
 	private UserDao usDao;
-	private User user; 
-	@Autowired
+	@Resource
 	private CategoryService catService;
-    
-    @Before
-    public void init() {
-    	user = usService.createSubscriber("login1", "password1");
-    }
  
 	@Test
 	public void testCreateSubscriber() {
+		User user = usService.createSubscriber("createUser", "createUser");
 		Assert.assertNotNull(user.getId());
-		Assert.assertEquals(user, usDao.findByLogin("login1").get());
+		Assert.assertEquals(user, usDao.findByLogin("createUser").get());
 	}
 	
 	@Test
 	public void testGetByLogin() {
-		Assert.assertTrue(usDao.findByLogin("login1").isPresent());
-	}
-		
-	@Test
-	public void testGetByLoginError() {
-		Assert.assertTrue(!usDao.findByLogin("login4").isPresent());
+		usService.createSubscriber("getByName", "getByName");
+		Assert.assertTrue(usDao.findByLogin("getByName").isPresent());
 	}
 	
 	@Test
 	public void testSubscribe() {
-		Category cat = catService.createCategory("test");
-		Subscription sub = usService.subscribe(user, cat.getId());
+		User user = usService.createSubscriber("subscribe", "subscribe");
+		Category cat = catService.createCategory("subscribe");
+		Subscription sub = usService.subscribe(user, cat);
 		Assert.assertEquals(user, sub.getUser());
 		Assert.assertEquals(cat, sub.getCategory());
-	}
-
-	@Test(expected = Error.class)
-	public void testSubscribeException() {
-		usService.subscribe(user, null);
 	}
 	
 	@Test
 	public void testGetSubscription() {
-		Category cat1 = catService.createCategory("test1");
-		Category cat2 = catService.createCategory("test2");
-		int subCount = user.getSubscriptions().size();
-		usService.subscribe(user, cat1.getId());
-		usService.subscribe(user, cat2.getId());
-		Assert.assertTrue(user.getSubscriptions().size() == subCount+2);
+		User user = usService.createSubscriber("listSubscribtions", "listSubscribtions");
+		Category cat1 = catService.createCategory("listSubscribtions1");
+		Category cat2 = catService.createCategory("listSubscribtions2");
+		usService.subscribe(user, cat1);
+		usService.subscribe(user, cat2);
+		Optional<User> updated = usDao.findByLogin("listSubscribtions");
+		Assert.assertTrue(updated.isPresent());
+		Assert.assertTrue(updated.get().getSubscriptions().size() == 2);
 	}
 }

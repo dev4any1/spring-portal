@@ -19,7 +19,7 @@ public class Journal {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(nullable = false)
-	protected String name;
+	protected String title;
 	@Column(nullable = false)
 	protected String fileId;
 	@Column(nullable = false)
@@ -40,11 +40,11 @@ public class Journal {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String name) {
+		this.title = name;
 	}
 	public String getFileId() {
 		return fileId;
@@ -72,7 +72,7 @@ public class Journal {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, fileId, publishedAt, category, publisher);
+		return Objects.hash(id, title, fileId, publishedAt, category, publisher);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -98,10 +98,10 @@ public class Journal {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (title == null) {
+			if (other.title != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!title.equals(other.title))
 			return false;
 		if (publishedAt == null) {
 			if (other.publishedAt != null)
