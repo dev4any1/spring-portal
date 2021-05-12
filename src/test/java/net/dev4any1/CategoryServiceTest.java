@@ -1,4 +1,4 @@
-package net.dev4any1;
+/*package net.dev4any1;
 
 import javax.annotation.Resource;
 
@@ -28,3 +28,4 @@ public class CategoryServiceTest {
 		Assert.assertTrue(dao.findByName("name").isPresent());
 	}
 }
+*/
